@@ -1,37 +1,47 @@
 import React from "react";
-import Tree from "react-d3-tree"
+import Tree from "react-tree-graph";
 
-let treeData = [
-  {
-    name: "Top Level",
-    parent: "null",
-    children: [
-      {
-        name: "Level 2: A",
-        parent: "Top Level",
-        children: [
-          {
-            name: "Son of A",
-            parent: "Level 2: A",
-          },
-          {
-            name: "Daughter of A",
-            parent: "Level 2: A",
-          },
-        ],
+const orgChart = {
+  name: "CEO",
+  children: [
+    {
+      name: "Manager",
+      attributes: {
+        department: "Production",
       },
-      {
-        name: "Level 2: B",
-        parent: "Top Level",
-      },
-    ],
-  },
-];
+      children: [
+        {
+          name: "Foreman",
+          attributes: {
+            department: "Fabrication",
+          },
+          children: [
+            {
+              name: "Worker",
+            },
+          ],
+        },
+        {
+          name: "Foreman",
+          attributes: {
+            department: "Assembly",
+          },
+          children: [
+            {
+              name: "Worker",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 function Graph() {
   return (
     <div className="Graph">
       <h1>Graph</h1>
+        <Tree data={orgChart} height={400} width={400} />
     </div>
   );
 }

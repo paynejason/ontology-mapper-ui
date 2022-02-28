@@ -1,5 +1,12 @@
+import Form from "./components/Form";
+
 function Home() {
-    return <div>This is the home page!</div>;
+    return (
+        <div className="App">
+            <h1>text2onto</h1>
+            <Form />
+        </div>
+    );
 }
 
 export default Home;

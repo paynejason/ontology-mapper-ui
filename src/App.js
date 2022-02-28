@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import AsyncResults from "./results/AsyncResults";
 import Home from "./Home";
-import "./App.css";
 
 function App() {
     const [currentTime, setCurrentTime] = useState(0);

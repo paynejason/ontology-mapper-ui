@@ -11,7 +11,7 @@
     margin: 0.25rem 0;
 }
 form {
-    width: 80%;
+    width: 85%;
 }
 
 .form {
@@ -22,5 +22,52 @@ form {
 .center-btn {
     display: flex;
     justify-content: center;
+    margin: 1rem 0;
+}
+
+div.bold,
+input.bold {
+    font-weight: bold;
+}
+
+.textarea {
+    display: flex;
+}
+
+.textarea .label {
+    margin-right: 2rem;
+}
+.textarea textarea {
+    flex-grow: 2;
+}
+
+.ft-upload {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    flex-grow: 1;
+}
+
+.ft-upload-area {
+    display: grid;
+    grid-template-columns: 1fr 4rem 1fr;
+}
+
+.vertical-line {
+    border-left: 2px solid #aaa;
+    margin: 1.5rem 2rem;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.ft-upload-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.or {
     margin: 1rem 0;
 }

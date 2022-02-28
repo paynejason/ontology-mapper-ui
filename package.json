@@ -3,9 +3,11 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@dropzone-ui/react": "^6.7.1",
         "@testing-library/jest-dom": "^5.11.4",
         "@testing-library/react": "^11.1.0",
         "@testing-library/user-event": "^12.1.10",
+        "axios": "^0.24.0",
         "history": "5",
         "lodash": "^4.17.21",
         "papaparse": "^5.3.1",

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Form.css";
 import ArgField from "./ArgField.js";
+import FileTextUpload from "./FileTextUpload";
 
 function Form() {
     const [expanded, setExpanded] = useState(false);
@@ -9,6 +10,8 @@ function Form() {
     const [baseIRI, setBaseIRI] = useState("");
     const [inclDeprecated, setInclDeprecated] = useState(true);
     const [inclIndividuals, setInclIndividuals] = useState(false);
+    const [unstructuredTerms, setUnstructuredTerms] = useState(false);
+    const [ontology, setOntology] = useState(false);
 
     // uses Bootstrap grid system
 
@@ -110,14 +113,14 @@ function Form() {
                 <div className="center-btn">
                     {!expanded ? (
                         <div
-                            className="btn btn-secondary"
+                            className="bold btn btn-secondary"
                             onClick={() => setExpanded(true)}
                         >
                             ▼ Show More Options ▼
                         </div>
                     ) : (
                         <div
-                            className="btn btn-secondary"
+                            className="bold btn btn-secondary"
                             onClick={() => setExpanded(false)}
                         >
                             ▲ Show Less Options ▲
@@ -125,15 +128,21 @@ function Form() {
                     )}
                 </div>
                 <hr />
-                <label>File 1</label>
-                <input type="file" name="file1" />
-                <br />
-
-                <label>File 2</label>
-                <input type="file" name="file2" />
-                <br />
-
-                <input type="submit" />
+                <div className="ft-upload-area">
+                    <FileTextUpload
+                        setUnstructuredTerms={setUnstructuredTerms}
+                    />
+                    <div className="vertical-line"></div>
+                    <FileTextUpload ontology={true} setOntology={setOntology} />
+                </div>
+                {unstructuredTerms && ontology && (
+                    <div className="center-btn">
+                        <input
+                            type="submit"
+                            className="bold btn btn-secondary"
+                        />
+                    </div>
+                )}
             </form>
         </div>
     );

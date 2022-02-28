@@ -4,7 +4,11 @@ function Tooltip({ tip }) {
     return (
         <>
             <span data-tip={tip}>ⓘ:</span>
-            <ReactTooltip place="top" type="dark" effect="float" />
+            <ReactTooltip
+                place="top"
+                effect="float"
+                backgroundColor="#6c757d"
+            />
         </>
     );
 }

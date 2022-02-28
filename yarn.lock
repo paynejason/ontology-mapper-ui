@@ -1198,6 +1198,25 @@
   "resolved" "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-10.1.0.tgz"
   "version" "10.1.0"
 
+"@dropzone-ui/core@^1.1.1":
+  "integrity" "sha512-ZtMPasbaFfYx4Ugv8DKY2xE2+WRIYyoskNgc0kHSA3AQGinjROSD88H3jTi70acN3N37hfvunREJN29RXIDnow=="
+  "resolved" "https://registry.npmjs.org/@dropzone-ui/core/-/core-1.1.1.tgz"
+  "version" "1.1.1"
+
+"@dropzone-ui/react@^6.7.1":
+  "integrity" "sha512-WZ3XzGMeUQjAeu562r5wfItToUAk/3d2MP2DpzczhAfbpxtz8Wg02Hq89BWwNMKHLjdFNeHEIIGJDQy9ChsXjw=="
+  "resolved" "https://registry.npmjs.org/@dropzone-ui/react/-/react-6.7.1.tgz"
+  "version" "6.7.1"
+  dependencies:
+    "@dropzone-ui/core" "^1.1.1"
+    "@dynamicss/dynamicss" "^2.2.0"
+    "@unlimited-react-components/material-button" "^1.2.8"
+
+"@dynamicss/dynamicss@^2.0.3", "@dynamicss/dynamicss@^2.2.0":
+  "integrity" "sha512-74nARZcYDAtCGyE/rvVowFKvnbWAqmkX1u2gcCNT9SeV3wE8huT5UAcQ0wJIovS7xOQcHvSXZduGQ+CM3nZnwQ=="
+  "resolved" "https://registry.npmjs.org/@dynamicss/dynamicss/-/dynamicss-2.2.0.tgz"
+  "version" "2.2.0"
+
 "@egjs/hammerjs@^2.0.0":
   "integrity" "sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A=="
   "resolved" "https://registry.npmjs.org/@egjs/hammerjs/-/hammerjs-2.0.17.tgz"
@@ -2051,6 +2070,19 @@
     "@typescript-eslint/types" "4.33.0"
     "eslint-visitor-keys" "^2.0.0"
 
+"@unlimited-react-components/kernel@^1.0.2":
+  "integrity" "sha512-yzTua10xjcLDOR/jMXdyPKjzsWDxsez6aE7QTFa16FtGqeU/jhBxzoxsopPJa+Lu3dtu4siSG6xIE52YLu7bZw=="
+  "resolved" "https://registry.npmjs.org/@unlimited-react-components/kernel/-/kernel-1.0.2.tgz"
+  "version" "1.0.2"
+
+"@unlimited-react-components/material-button@^1.2.8":
+  "integrity" "sha512-gKSKysNUFWG774mV6NhAvbx8Fzv+QqO6DRs61k3N+M0pf5AueADpnJMgChIPLJvhjfWEoU3Z9K84lVrpWftACg=="
+  "resolved" "https://registry.npmjs.org/@unlimited-react-components/material-button/-/material-button-1.2.8.tgz"
+  "version" "1.2.8"
+  dependencies:
+    "@dynamicss/dynamicss" "^2.0.3"
+    "@unlimited-react-components/kernel" "^1.0.2"
+
 "@webassemblyjs/ast@1.9.0":
   "integrity" "sha512-C6wW5L+b7ogSDVqymbkkvuW9kruN//YisMED04xzeBBqjHa2FYnmvOlS6Xj68xWQRgWvI9cIglsjFowH/RJyEA=="
   "resolved" "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"
@@ -2587,6 +2619,13 @@
   "integrity" "sha512-4Hk6iSA/H90rtiPoCpSkeJxNWCPBf7szwVvaUqrPdxo0j2Y04suHK9jPKXaE3WI7OET6wBSwsWw7FDc1DBq7iQ=="
   "resolved" "https://registry.npmjs.org/axe-core/-/axe-core-4.3.4.tgz"
   "version" "4.3.4"
+
+"axios@^0.24.0":
+  "integrity" "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA=="
+  "resolved" "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz"
+  "version" "0.24.0"
+  dependencies:
+    "follow-redirects" "^1.14.4"
 
 "axobject-query@^2.2.0":
   "integrity" "sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA=="
@@ -5230,7 +5269,7 @@
     "inherits" "^2.0.3"
     "readable-stream" "^2.3.6"
 
-"follow-redirects@^1.0.0":
+"follow-redirects@^1.0.0", "follow-redirects@^1.14.4":
   "integrity" "sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w=="
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz"
   "version" "1.14.9"

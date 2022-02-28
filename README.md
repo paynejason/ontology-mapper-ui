@@ -17,14 +17,12 @@ git submodule update
 ```
 to update the local version of that submodule.
 
-To start the application, run the command:
-```
-docker-compose up
-```
-The first time the command is run, Docker should build two images and the corresponding containers:
+Before running, make sure you have the latest version of the repository built by running the command `docker-compose build`. Docker should build two images:
 
 -   `ontology-mapper-api`: the Flask backend API
 -   `ontology-mapper-client`: the React frontend
+
+Then, to run the website, run the command `docker-compose up`. Docker should build two containers corresponding to the two images.
 
 Then, in a browser, navigate to `localhost:3000` to see the application. When done, hit `Ctrl+C` in the command line to shut down the containers.
 

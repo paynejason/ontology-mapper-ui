@@ -1,20 +1,16 @@
-thead .fixed-th {
+.center {
+    text-align: center;
+}
+
+.table > thead .fixed-th {
     background-color: #e2e2e2;
-}
-
-a {
-    color: #555;
-}
-
-a:hover {
-    color: #222;
 }
 
 button.btn {
     margin: 1rem;
 }
 
-.table {
+table.table {
     width: 95%;
     margin-top: 1rem;
     margin-left: auto;
@@ -22,34 +18,34 @@ button.btn {
     border: 2px solid black;
 }
 
-td.fixed-td {
+.table td.fixed-td {
     background-color: #f8f9fa;
 }
 
-*.interact-td {
+.table .interact-td {
     cursor: pointer;
     font-weight: 500;
 }
 
-*.interact-td:hover {
+.table .interact-td:hover {
     background-color: #f8f9fa;
 }
 
-td.dark-interact-td {
+.table td.dark-interact-td {
     cursor: pointer;
     font-weight: 500;
 }
 
-td.dark-interact-td:hover {
+.table td.dark-interact-td:hover {
     filter: brightness(85%);
     background-color: #e2e2e2;
 }
 
-.alt-row td {
+.table .alt-row td {
     background-color: #e2e2e2;
 }
 
-.alt-row td.fixed-td {
+.table .alt-row td.fixed-td {
     filter: brightness(85%);
     background-color: #f8f9fa;
 }

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { default as _ } from "lodash";
 import { CSVLink } from "react-csv";
 
-import "./bootstrap.min.css";
 import "./Results.css";
 
 import TermRows from "./TermRows";
@@ -184,7 +183,7 @@ export default function Results(props) {
     );
 
     return (
-        <div>
+        <div className="center">
             <p>
                 <b>
                     {`${sourceTerms.length} terms total; ${

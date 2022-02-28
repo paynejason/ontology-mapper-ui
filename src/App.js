@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import AsyncResults from "./results/AsyncResults";
+import AsyncResults from "./components/AsyncResults";
 import Home from "./Home";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
     // });
 
     return (
-        <div className="App">
+        <div>
             {/*<p>The current time is {currentTime}.</p>*/}
             <nav>
                 <Link to="/">Home</Link> {" | "}

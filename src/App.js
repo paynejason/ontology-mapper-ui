@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <h1>text2onto</h1>
       <Form />
-      <Graph />
+      {/* <Graph /> */}
     </div>
   );
 }

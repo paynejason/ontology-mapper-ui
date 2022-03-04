@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Form.css";
 import ArgField from "./ArgField.js";
 import FileTextUpload from "./FileTextUpload";
+import axios from "axios";
 
 function Form() {
     const [expanded, setExpanded] = useState(false);
@@ -10,10 +11,9 @@ function Form() {
     const [baseIRI, setBaseIRI] = useState("");
     const [inclDeprecated, setInclDeprecated] = useState(true);
     const [inclIndividuals, setInclIndividuals] = useState(false);
-    const [unstructuredTerms, setUnstructuredTerms] = useState(false);
-    const [ontology, setOntology] = useState(false);
 
-    // uses Bootstrap grid system
+    const [unstructuredTerms, setUnstructuredTerms] = useState(undefined);
+    const [ontology, setOntology] = useState(undefined);
 
     const mainArgFields = [
         {
@@ -95,14 +95,46 @@ function Form() {
         },
     ];
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        const url = "http://localhost:5000/api/upload_file";
+        const formData = new FormData();
+
+        if (typeof unstructuredTerms === "string") {
+            formData.append("unstructured-terms-text", unstructuredTerms);
+        } else {
+            formData.append(
+                "unstructured-terms-file",
+                unstructuredTerms[0].file
+            );
+        }
+
+        if (typeof ontology === "string") {
+            formData.append("ontology-text", ontology);
+        } else {
+            formData.append("ontology-file", ontology[0].file);
+        }
+
+        formData.append(
+            "ontology-" + (typeof ontology === "string" ? "text" : "file"),
+            ontology
+        );
+
+        const config = {
+            headers: {
+                "content-type": "multipart/form-data",
+                Origin: "http://localhost:3000",
+            },
+        };
+        axios.post(url, formData, config).then((response) => {
+            console.log(response.data);
+        });
+    }
+
     // uses Bootstrap grid system
     return (
         <div className="form">
-            <form
-                action="http://localhost:5000/api/upload_file"
-                method="POST"
-                encType="multipart/form-data"
-            >
+            <form onSubmit={handleSubmit}>
                 {mainArgFields.map((d) => (
                     <ArgField {...d} key={d.name} />
                 ))}
@@ -129,11 +161,9 @@ function Form() {
                 </div>
                 <hr />
                 <div className="ft-upload-area">
-                    <FileTextUpload
-                        setUnstructuredTerms={setUnstructuredTerms}
-                    />
+                    <FileTextUpload setOutput={setUnstructuredTerms} />
                     <div className="vertical-line"></div>
-                    <FileTextUpload ontology={true} setOntology={setOntology} />
+                    <FileTextUpload ontology={true} setOutput={setOntology} />
                 </div>
                 {unstructuredTerms && ontology && (
                     <div className="center-btn">

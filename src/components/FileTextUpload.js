@@ -1,39 +1,30 @@
 import { Dropzone, FileItem } from "@dropzone-ui/react";
 import { useState, useEffect } from "react";
 
-function FileTextUpload({ ontology, setOntology, setUnstructuredTerms }) {
+function FileTextUpload({ ontology, setOutput }) {
     const [display, setDisplay] = useState("both");
-    const [files, setFiles] = useState([]);
     const [textField, setTextField] = useState("");
+    const [files, setFiles] = useState([]);
+
     const updateFiles = (incomingFiles) => {
         setFiles(incomingFiles);
+        setOutput(files);
     };
 
     useEffect(() => {
         if (files.length === 0 && textField === "") {
             setDisplay("both");
+            setOutput(null);
         } else if (files.length !== 0) {
             setDisplay("files");
+            setOutput(files);
         } else if (textField !== "") {
             setDisplay("terms");
+            setOutput(textField);
         }
-    }, [files, textField]);
+    }, [files, textField, setOutput]);
 
-    useEffect(() => {
-        if (ontology) {
-            if (display === "both") {
-                setOntology(false);
-            } else {
-                setOntology(true);
-            }
-        } else {
-            if (display === "both") {
-                setUnstructuredTerms(false);
-            } else {
-                setUnstructuredTerms(true);
-            }
-        }
-    }, [display]);
+    const name = ontology ? "ontology-" : "unstructured-terms-";
 
     return (
         <div
@@ -72,7 +63,7 @@ function FileTextUpload({ ontology, setOntology, setUnstructuredTerms }) {
                 {(display === "both" || display === "terms") && (
                     <div className="arg-field textarea">
                         <div className="label">
-                            <label htmlFor="textfield">
+                            <label htmlFor={name + "text-field"}>
                                 {ontology ? "Ontology URL" : "Enter Terms:"}
                             </label>
                         </div>
@@ -81,13 +72,13 @@ function FileTextUpload({ ontology, setOntology, setUnstructuredTerms }) {
                             <input
                                 style={{ width: "100%" }}
                                 type="url"
-                                name="textfield"
+                                name={name + "text-field"}
                                 value={textField}
                                 onChange={(e) => setTextField(e.target.value)}
                             ></input>
                         ) : (
                             <textarea
-                                name="textfield"
+                                name={name + "text-field"}
                                 placeholder="(one term per line)"
                                 value={textField}
                                 onChange={(e) => setTextField(e.target.value)}

@@ -1,3 +1,7 @@
+.waiting {
+    text-align: center;
+}
+
 .arg-field > .label {
     font-weight: bold;
     text-align: right;

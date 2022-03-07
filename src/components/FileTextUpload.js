@@ -53,7 +53,7 @@ function FileTextUpload({ ontology, setOutput }) {
                         minHeight={0}
                     >
                         {files.map((file) => (
-                            <FileItem {...file} preview />
+                            <FileItem {...file} key={1} preview />
                         ))}
                     </Dropzone>
                 )}

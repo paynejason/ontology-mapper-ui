@@ -5,6 +5,7 @@ import FileTextUpload from "./FileTextUpload";
 import axios from "axios";
 
 function Form() {
+    const [waiting, setWaiting] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [topMappings, setTopMappings] = useState(3);
     const [minScore, setMinScore] = useState(0.5);
@@ -123,12 +124,22 @@ function Form() {
         const config = {
             headers: {
                 "content-type": "multipart/form-data",
-                Origin: "http://localhost:3000",
             },
         };
+
+        setWaiting(true);
+
         axios.post(url, formData, config).then((response) => {
             console.log(response.data);
         });
+    }
+
+    if (waiting) {
+        return (
+            <div className="waiting">
+                <h3>Mapping in Progress ...</h3>
+            </div>
+        );
     }
 
     // uses Bootstrap grid system

@@ -3,7 +3,8 @@ WORKDIR /app
 
 COPY flask-api/* ./
 RUN pip install -r ./requirements.txt
-ENV FLASK_ENV development 
+RUN pip install ./ontology-mapper
+ENV FLASK_ENV development
 
 EXPOSE 5000
 CMD ["gunicorn", "-b", ":5000", "flask-api:app"]

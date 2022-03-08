@@ -21,8 +21,8 @@ export async function parseCsv(file) {
 
 async function getData() {
     const [csvResponse, jsonResponse] = await Promise.all([
-        fetch("full.csv"),
-        fetch("full-graphs.json"),
+        fetch("http://localhost:5000/api/download_csv"),
+        fetch("http://localhost:5000/api/download_graph_json"),
     ]);
     const [result, json] = await Promise.all([
         csvResponse.body.getReader().read(),
@@ -35,10 +35,13 @@ async function getData() {
     const data = (await parseCsv(csv)).data;
 
     // combine
-    const combinedData = _.map(_.zip(data, json), ([d, j]) => ({
-        ...d,
-        graph: j,
-    }));
+    const combinedData = _.map(data, (d) => {
+        const g = _.find(json, ["iri", d.mapped_term_iri]);
+        return {
+            ...d,
+            graph: g,
+        };
+    });
 
     const maxCount = _.max(_.values(_.countBy(data, "source_term")));
     return { data: combinedData, maxCount: maxCount };

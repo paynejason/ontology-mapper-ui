@@ -3,6 +3,7 @@ import "./Form.css";
 import ArgField from "./ArgField.js";
 import FileTextUpload from "./FileTextUpload";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 function Form() {
     const [waiting, setWaiting] = useState(false);
@@ -52,8 +53,8 @@ function Form() {
 
     const expandedArgFields = [
         {
-            name: "base_iri",
-            label: "Base IRI",
+            name: "base_iris",
+            label: "Base IRIs",
             tip:
                 "Map only to terms whose IRIs start with any IRI given in this comma-separated list.",
             field: (
@@ -131,6 +132,7 @@ function Form() {
 
         axios.post(url, formData, config).then((response) => {
             console.log(response.data);
+            return <Navigate to="/results/" />;
         });
     }
 

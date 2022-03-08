@@ -101,7 +101,7 @@ function Form() {
     function handleSubmit(e) {
         e.preventDefault();
         const URL_BASE =
-            process.env.REACT_DOCKER === "true" ? "" : "http://localhost:5000";
+            process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
         const url = URL_BASE + "/api/upload_file";
         const formData = new FormData();
 

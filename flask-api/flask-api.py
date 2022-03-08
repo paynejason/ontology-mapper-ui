@@ -1,13 +1,13 @@
-from flask import Flask, request, Response, send_from_directory
+from flask import Flask, request, Response, send_file
 import subprocess
 import json
 
 app = Flask(__name__)
 
-OUTPUT_FOLDER = "./output/"
+OUTPUT_FOLDER = "output/"
 
 
-@app.route("/")
+@app.route("/api")
 def server_running():
     return "SERVER RUNNING"
 
@@ -68,17 +68,18 @@ def upload_file():
 
 @app.route("/api/download_csv")
 def download_csv():
-    resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv",)
+    resp = send_file(OUTPUT_FOLDER + "t2t-out.csv")
+    # resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv",)
+    resp.headers["Content-Type"] = "text/csv"
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    resp.headers["Origin"] = "http://localhost:5000/api/download_csv"
     return resp
 
 
 @app.route("/api/download_graph_json")
 def download_graph_json():
-    resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv-term-graphs.json",)
+    resp = send_file(OUTPUT_FOLDER + "t2t-out.csv-term-graphs.json")
+    resp.headers["Content-Type"] = "application/json"
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    resp.headers["Origin"] = "http://localhost:5000/api/download_graph_json"
     return resp
 
 

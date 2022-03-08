@@ -21,7 +21,7 @@ export async function parseCsv(file) {
 
 async function getData() {
     const URL_BASE =
-        process.env.REACT_DOCKER === "true" ? "" : "http://localhost:5000";
+        process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
     const [csvResponse, jsonResponse] = await Promise.all([
         fetch(URL_BASE + "/api/download_csv"),
         fetch(URL_BASE + "/api/download_graph_json"),

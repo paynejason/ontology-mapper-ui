@@ -183,7 +183,6 @@ export default function OntologyCell(props) {
                 // const mti = new URL(nodeId).pathname;
                 const id = nodeId.slice(_.lastIndexOf(nodeId, "/") + 1);
                 const newTerm = {
-                    graph: props.graph,
                     id: id,
                     mapped_ontology_iri: "http://www.ebi.ac.uk/efo/efo.owl#",
                     mapped_term_iri: nodeId,

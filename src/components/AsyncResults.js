@@ -46,7 +46,7 @@ async function getData() {
     });
 
     const maxCount = _.max(_.values(_.countBy(data, "source_term")));
-    return { data: combinedData, maxCount: maxCount };
+    return { data: combinedData, maxCount: maxCount, graphs: json };
 }
 
 export default function AsyncResults() {

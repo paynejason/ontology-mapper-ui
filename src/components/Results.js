@@ -104,6 +104,7 @@ export default function Results(props) {
     function addNewTerm(source_term_index, source_term, new_term) {
         const newTerm = {
             ...new_term,
+            graph: _.find(props.graphs, ["iri", new_term.mapped_term_iri]),
             source_term: source_term,
             number: source_term_index + 1,
             term_alt_number: data[source_term_index].length,

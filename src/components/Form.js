@@ -3,9 +3,10 @@ import "./Form.css";
 import ArgField from "./ArgField.js";
 import FileTextUpload from "./FileTextUpload";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Form() {
+    const navigate = useNavigate();
     const [waiting, setWaiting] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [topMappings, setTopMappings] = useState(3);
@@ -99,28 +100,31 @@ function Form() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        const url = "http://localhost:5000/api/upload_file";
+        const URL_BASE =
+            process.env.REACT_DOCKER === "true" ? "" : "http://localhost:5000";
+        const url = URL_BASE + "/api/upload_file";
         const formData = new FormData();
 
         if (typeof unstructuredTerms === "string") {
-            formData.append("unstructured-terms-text", unstructuredTerms);
+            formData.append("unstructured_terms_text", unstructuredTerms);
         } else {
             formData.append(
-                "unstructured-terms-file",
+                "unstructured_terms_file",
                 unstructuredTerms[0].file
             );
         }
 
         if (typeof ontology === "string") {
-            formData.append("ontology-text", ontology);
+            formData.append("ontology_text", ontology);
         } else {
-            formData.append("ontology-file", ontology[0].file);
+            formData.append("ontology_file", ontology[0].file);
         }
 
-        formData.append(
-            "ontology-" + (typeof ontology === "string" ? "text" : "file"),
-            ontology
-        );
+        formData.append("top_mappings", topMappings);
+        formData.append("min_score", minScore);
+        formData.append("base_iris", baseIRI);
+        formData.append("incl_deprecated", inclDeprecated);
+        formData.append("incl_individuals", inclIndividuals);
 
         const config = {
             headers: {
@@ -132,7 +136,7 @@ function Form() {
 
         axios.post(url, formData, config).then((response) => {
             console.log(response.data);
-            return <Navigate to="/results/" />;
+            navigate("/results/");
         });
     }
 

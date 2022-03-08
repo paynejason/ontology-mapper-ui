@@ -1,10 +1,16 @@
+# Build Flask API
 FROM python:3.9
 WORKDIR /app
 
 COPY flask-api/* ./
 RUN pip install -r ./requirements.txt
-RUN pip install ./ontology-mapper
 ENV FLASK_ENV development
+ENV REACT_APP_DOCKER true
+
+# WORKDIR ./ontology-mapper
+RUN pip install .
+
+WORKDIR /app
 
 EXPOSE 5000
 CMD ["gunicorn", "-b", ":5000", "flask-api:app"]

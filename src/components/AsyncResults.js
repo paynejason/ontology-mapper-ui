@@ -20,9 +20,11 @@ export async function parseCsv(file) {
 }
 
 async function getData() {
+    const URL_BASE =
+        process.env.REACT_DOCKER === "true" ? "" : "http://localhost:5000";
     const [csvResponse, jsonResponse] = await Promise.all([
-        fetch("http://localhost:5000/api/download_csv"),
-        fetch("http://localhost:5000/api/download_graph_json"),
+        fetch(URL_BASE + "/api/download_csv"),
+        fetch(URL_BASE + "/api/download_graph_json"),
     ]);
     const [result, json] = await Promise.all([
         csvResponse.body.getReader().read(),

@@ -14,56 +14,55 @@ def server_running():
 
 @app.route("/api/upload_file", methods=["POST"])
 def upload_file():
-
-    if "unstructured-terms-text" in request.form:
+    if "unstructured_terms_text" in request.form:
         # text is list of terms, write to file
-        with open("unstructured-terms.txt") as f:
-            f.write(request.form["unstructured-terms-text"])
+        with open("unstructured_terms.txt") as f:
+            f.write(request.form["unstructured_terms_text"])
     else:
         # text in file, save it
-        f1 = request.files["unstructured-terms-file"]
-        f1.save("unstructured-terms.txt")
+        f1 = request.files["unstructured_terms_file"]
+        f1.save("unstructured_terms.txt")
 
-    # source always held in unstructured-terms.txt
-    source = "unstructured-terms.txt"
+    # source always held in unstructured_terms.txt
+    source = "unstructured_terms.txt"
 
-    if "ontology-text" in request.form:
+    if "ontology_text" in request.form:
         # target is link, just keep as link
-        target = request.form["ontology-text"]
+        target = request.form["ontology_text"]
     else:
         # target is file, save it and point to path
-        f1 = request.files["ontology-file"]
+        f1 = request.files["ontology_file"]
         f1.save("ontology.owl")
         target = "ontology.owl"
 
     output = OUTPUT_FOLDER + "t2t-out.csv"
+    command = [
+        "python",
+        "ontology-mapper/text2term",
+        "-s",
+        source,
+        "-t",
+        target,
+        "-o",
+        output,
+        "-top",
+        request.form["top_mappings"],
+        "-min",
+        request.form["min_score"],
+        "-iris",
+        request.form["base_iris"],
+    ]
 
-    top_mappings = request.form["top_mappings"] if "top_mappings" in request.form else 3
-    min_score = request.form["min_score"] if "min_score" in request.form else 0.5
-    base_iris = request.form["base_iris"] if "base_iris" in request.form else ""
+    if request.form["incl_deprecated"] == "false":
+        command += ["-d"]
 
-    subprocess.run(
-        [
-            "python",
-            "ontology-mapper/text2term",
-            "-s",
-            source,
-            "-t",
-            target,
-            "-o",
-            output,
-            "-top",
-            top_mappings,
-            "min",
-            min_score,
-            "-iris",
-            base_iris,
-        ]
-    )
+    if request.form["incl_individuals"] == "true":
+        command += ["-i"]
+
+    subprocess.run(command)
 
     resp = Response("Upload Successful")
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    resp.headers["Origin"] = "http://localhost:5000/api/upload_file"
     return resp
 
 

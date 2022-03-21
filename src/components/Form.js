@@ -20,6 +20,7 @@ function Form() {
     const [currentStatus, setCurrentStatus] = useState(
         "Starting Mapping Process"
     );
+    const [processId, setProcessId] = useState(undefined);
 
     // api information
     const URL_BASE =
@@ -30,19 +31,26 @@ function Form() {
     useEffect(() => {
         // while waiting for mapper to finish, ping current status endpoint
 
-        const TIME_INTERVAL = 100000; // in ms
+        const TIME_INTERVAL = 5000; // in ms
         let timer;
 
         function startTimer() {
             timer = setInterval(function () {
-                axios.get(url_status).then((response) => {
-                    setCurrentStatus(response.data);
-                    if (response.data === "DONE") {
-                        setWaiting(false);
-                        stopTimer();
-                        navigate("/results/");
-                    }
-                });
+                axios
+                    .get(url_status, { params: { processId: processId } })
+                    .then((response) => {
+                        console.log(response.data);
+                        setCurrentStatus(response.data);
+
+                        if (response.data === "DONE") {
+                            // file switches to just say "DONE" when mapping complete
+                            setWaiting(false);
+                            stopTimer();
+                            navigate("/results/", {
+                                state: { processId: processId },
+                            });
+                        }
+                    });
             }, TIME_INTERVAL);
         }
 
@@ -52,7 +60,7 @@ function Form() {
         if (waiting) {
             startTimer();
         }
-    }, [waiting, navigate, url_status]);
+    }, [waiting, navigate, url_status, processId]);
 
     const mainArgFields = [
         {
@@ -166,9 +174,10 @@ function Form() {
             },
         };
 
-        axios.post(url_mapper, formData, config);
-
-        setWaiting(true);
+        axios.post(url_mapper, formData, config).then((response) => {
+            setProcessId(response.data);
+            setWaiting(true);
+        });
     }
 
     if (waiting) {

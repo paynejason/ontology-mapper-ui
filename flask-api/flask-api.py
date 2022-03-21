@@ -1,5 +1,6 @@
 from flask import Flask, request, Response, send_file, send_from_directory
 from subprocess import Popen, PIPE
+from threading import Thread
 import json
 import uuid
 
@@ -15,6 +16,8 @@ def server_running():
 
 @app.route("/api/upload_file", methods=["POST"])
 def upload_file():
+    processId = uuid.uuid4()
+
     if "unstructured_terms_text" in request.form:
         # text is list of terms, write to file
         with open("unstructured_terms.txt") as f:
@@ -36,7 +39,7 @@ def upload_file():
         f1.save("ontology.owl")
         target = "ontology.owl"
 
-    output = OUTPUT_FOLDER + "t2t-out.csv"
+    output = OUTPUT_FOLDER + f"{processId}.csv"
     command = [
         "python",
         "ontology-mapper/text2term",
@@ -60,47 +63,53 @@ def upload_file():
     if request.form["incl_individuals"] == "true":
         command += ["-i"]
 
-    # subprocess.run(command)
+    dbFile = f"output/{processId}.txt"
 
-    with open("output/db.txt", "w") as f:
-        f.write(
-            "Starting Mapping Process\n"
-        )  # append line to the appropriate status file
+    with open(dbFile, "w") as f:
+        f.write("Starting ...\n")
 
-    with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
-        for line in p.stdout:
-            print(line)  # for local debugging
-            with open("output/db.txt", "a") as f:
-                f.write(line)  # append line to the appropriate status file
+    def run_mapper(dbFile):
+        with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+            for line in p.stdout:
+                with open(dbFile, "a") as f:
+                    f.write(line)  # append line to the appropriate status file
 
-    with open("output/db.txt", "w") as f:
-        f.write("DONE")  # overwrite file
+        with open(dbFile, "w") as f:
+            f.write("DONE")  # overwrite file
 
-    resp = Response("Upload Successful")
+    new_thread = Thread(target=run_mapper, args=(dbFile,))
+
+    new_thread.start()
+
+    resp = Response(str(processId))
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
 
 @app.route("/api/current_status", methods=["GET"])
 def current_status():
-    with open("output/db.txt", "r") as f:
+    processId = request.args["processId"]
+    with open(OUTPUT_FOLDER + f"{processId}.txt", "r") as f:
         text = f.read()
     resp = Response(text)
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
 
-@app.route("/api/download_csv")
+@app.route("/api/download_csv", methods=["GET"])
 def download_csv():
-    resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv")
+    processId = request.args["processId"]
+    resp = send_from_directory(OUTPUT_FOLDER, f"{processId}.csv")
     resp.headers["Content-Type"] = "text/csv"
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
 
-@app.route("/api/download_graph_json")
+@app.route("/api/download_graph_json", methods=["GET"])
 def download_graph_json():
-    resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv-term-graphs.json")
+    processId = request.args["processId"]
+
+    resp = send_from_directory(OUTPUT_FOLDER, f"{processId}.csv-term-graphs.json")
     resp.headers["Content-Type"] = "application/json"
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp

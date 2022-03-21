@@ -16,8 +16,9 @@ yarn-error.log*
 .npm/
 package-lock.json
 
-# output from API
+# input+output from API
 flask-api/output/
+flask-api/input/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

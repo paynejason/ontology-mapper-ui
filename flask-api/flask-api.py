@@ -7,6 +7,7 @@ import uuid
 app = Flask(__name__)
 
 OUTPUT_FOLDER = "output/"
+INPUT_FOLDER = "input/"
 
 
 @app.route("/api")
@@ -18,28 +19,29 @@ def server_running():
 def upload_file():
     processId = uuid.uuid4()
 
+    # source always held in unstructured_terms.txt
+    source = INPUT_FOLDER + "unstructured_terms.txt"
+
     if "unstructured_terms_text" in request.form:
         # text is list of terms, write to file
-        with open("unstructured_terms.txt") as f:
+        with open(source) as f:
             f.write(request.form["unstructured_terms_text"])
     else:
         # text in file, save it
         f1 = request.files["unstructured_terms_file"]
-        f1.save("unstructured_terms.txt")
-
-    # source always held in unstructured_terms.txt
-    source = "unstructured_terms.txt"
+        f1.save(source)
 
     if "ontology_text" in request.form:
         # target is link, just keep as link
         target = request.form["ontology_text"]
     else:
         # target is file, save it and point to path
+        target = INPUT_FOLDER + "ontology.owl"
         f1 = request.files["ontology_file"]
-        f1.save("ontology.owl")
-        target = "ontology.owl"
+        f1.save(target)
 
     output = OUTPUT_FOLDER + f"{processId}.csv"
+
     command = [
         "python",
         "ontology-mapper/text2term",

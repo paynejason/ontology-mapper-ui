@@ -17,6 +17,7 @@ function Form() {
 
     const [unstructuredTerms, setUnstructuredTerms] = useState(undefined);
     const [ontology, setOntology] = useState(undefined);
+    const [currentStatus, setCurrentStatus] = useState("In Progress ...");
 
     const mainArgFields = [
         {
@@ -101,8 +102,12 @@ function Form() {
     function handleSubmit(e) {
         e.preventDefault();
         const URL_BASE =
-            process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
+            process.env.REACT_APP_DOCKER === "true"
+                ? ""
+                : "http://localhost:5000";
         const url = URL_BASE + "/api/upload_file";
+        const url_status = URL_BASE + "/api/current_status";
+
         const formData = new FormData();
 
         if (typeof unstructuredTerms === "string") {
@@ -134,16 +139,35 @@ function Form() {
 
         setWaiting(true);
 
-        axios.post(url, formData, config).then((response) => {
-            console.log(response.data);
-            navigate("/results/");
-        });
+        axios.post(url, formData, config);
+
+        let timer;
+
+        function startTimer() {
+            timer = setInterval(function () {
+                axios.get(url_status).then((response) => {
+                    console.log(response.data);
+                    setCurrentStatus(response.data);
+                    if (response.data === "DONE") {
+                        setWaiting(false);
+                        stopTimer();
+                        navigate("/results/");
+                    }
+                });
+            }, 5000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        startTimer();
     }
 
     if (waiting) {
         return (
             <div className="waiting">
-                <h3>Mapping in Progress ...</h3>
+                <h3>{currentStatus}</h3>
             </div>
         );
     }

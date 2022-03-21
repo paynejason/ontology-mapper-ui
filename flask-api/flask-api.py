@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, send_file
-import subprocess
+from subprocess import Popen, PIPE
 import json
+import uuid
 
 app = Flask(__name__)
 
@@ -59,9 +60,32 @@ def upload_file():
     if request.form["incl_individuals"] == "true":
         command += ["-i"]
 
-    subprocess.run(command)
+    # subprocess.run(command)
+
+    with open("output/db.txt", "w") as f:
+        f.write(
+            "Starting Mapping Process\n"
+        )  # append line to the appropriate status file
+
+    with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+        for line in p.stdout:
+            print(line)  # for local debugging
+            with open("output/db.txt", "a") as f:
+                f.write(line)  # append line to the appropriate status file
+
+    with open("output/db.txt", "w") as f:
+        f.write("DONE")  # overwrite file
 
     resp = Response("Upload Successful")
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+
+@app.route("/api/current_status", methods=["GET"])
+def current_status():
+    with open("output/db.txt", "r") as f:
+        text = f.read()
+    resp = Response(text)
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 

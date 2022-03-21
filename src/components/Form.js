@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Form.css";
 import ArgField from "./ArgField.js";
 import FileTextUpload from "./FileTextUpload";
@@ -17,7 +17,42 @@ function Form() {
 
     const [unstructuredTerms, setUnstructuredTerms] = useState(undefined);
     const [ontology, setOntology] = useState(undefined);
-    const [currentStatus, setCurrentStatus] = useState("In Progress ...");
+    const [currentStatus, setCurrentStatus] = useState(
+        "Starting Mapping Process"
+    );
+
+    // api information
+    const URL_BASE =
+        process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
+    const url_mapper = URL_BASE + "/api/upload_file";
+    const url_status = URL_BASE + "/api/current_status";
+
+    useEffect(() => {
+        // while waiting for mapper to finish, ping current status endpoint
+
+        const TIME_INTERVAL = 100000; // in ms
+        let timer;
+
+        function startTimer() {
+            timer = setInterval(function () {
+                axios.get(url_status).then((response) => {
+                    setCurrentStatus(response.data);
+                    if (response.data === "DONE") {
+                        setWaiting(false);
+                        stopTimer();
+                        navigate("/results/");
+                    }
+                });
+            }, TIME_INTERVAL);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+        if (waiting) {
+            startTimer();
+        }
+    }, [waiting, navigate, url_status]);
 
     const mainArgFields = [
         {
@@ -101,12 +136,6 @@ function Form() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        const URL_BASE =
-            process.env.REACT_APP_DOCKER === "true"
-                ? ""
-                : "http://localhost:5000";
-        const url = URL_BASE + "/api/upload_file";
-        const url_status = URL_BASE + "/api/current_status";
 
         const formData = new FormData();
 
@@ -137,37 +166,19 @@ function Form() {
             },
         };
 
+        axios.post(url_mapper, formData, config);
+
         setWaiting(true);
-
-        axios.post(url, formData, config);
-
-        let timer;
-
-        function startTimer() {
-            timer = setInterval(function () {
-                axios.get(url_status).then((response) => {
-                    console.log(response.data);
-                    setCurrentStatus(response.data);
-                    if (response.data === "DONE") {
-                        setWaiting(false);
-                        stopTimer();
-                        navigate("/results/");
-                    }
-                });
-            }, 5000);
-        }
-
-        function stopTimer() {
-            clearInterval(timer);
-        }
-
-        startTimer();
     }
 
     if (waiting) {
         return (
             <div className="waiting">
-                <h3>{currentStatus}</h3>
+                <h3>
+                    {currentStatus.split("\n").map((line) => (
+                        <p key={line}>{line}</p>
+                    ))}
+                </h3>
             </div>
         );
     }

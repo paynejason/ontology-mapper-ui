@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, send_file
+from flask import Flask, request, Response, send_file, send_from_directory
 from subprocess import Popen, PIPE
 import json
 import uuid
@@ -92,8 +92,7 @@ def current_status():
 
 @app.route("/api/download_csv")
 def download_csv():
-    resp = send_file(OUTPUT_FOLDER + "t2t-out.csv")
-    # resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv",)
+    resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv")
     resp.headers["Content-Type"] = "text/csv"
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
@@ -101,7 +100,7 @@ def download_csv():
 
 @app.route("/api/download_graph_json")
 def download_graph_json():
-    resp = send_file(OUTPUT_FOLDER + "t2t-out.csv-term-graphs.json")
+    resp = send_from_directory(OUTPUT_FOLDER, "t2t-out.csv-term-graphs.json")
     resp.headers["Content-Type"] = "application/json"
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp

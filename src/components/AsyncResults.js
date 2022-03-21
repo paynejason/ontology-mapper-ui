@@ -1,7 +1,6 @@
 import Async from "react-async";
 import Results from "./Results";
 import Papa from "papaparse";
-import axios from "axios";
 import { default as _ } from "lodash";
 import { useLocation } from "react-router-dom";
 

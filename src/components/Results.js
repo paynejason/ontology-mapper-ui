@@ -6,6 +6,7 @@ import "./Results.css";
 
 import TermRows from "./TermRows";
 import PageBar from "./PageBar";
+import Layout from "./Layout";
 
 const table_columns = [
     "#",
@@ -183,7 +184,7 @@ export default function Results(props) {
         />
     );
 
-    return (
+    const content = (
         <div className="center">
             <p>
                 <b>
@@ -250,4 +251,6 @@ export default function Results(props) {
             {pageBar}
         </div>
     );
+
+    return <Layout content={content} />;
 }

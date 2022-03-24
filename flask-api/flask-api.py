@@ -3,9 +3,13 @@ from subprocess import Popen, PIPE
 from threading import Thread
 import json
 import uuid
+import os
 
 app = Flask(__name__)
 
+# if os.environ.get("FLASK_ENV") == "production":
+#     OUTPUT_FOLDER = INPUT_FOLDER = ""
+# else:
 OUTPUT_FOLDER = "output/"
 INPUT_FOLDER = "input/"
 
@@ -42,9 +46,15 @@ def upload_file():
 
     output = OUTPUT_FOLDER + f"{processId}.csv"
 
+    # folder structure changes between local and Docker
+    if os.environ.get("FLASK_ENV") == "production":
+        mapper_path = "text2term"
+    else:
+        mapper_path = "ontology-mapper/text2term"
+
     command = [
         "python",
-        "ontology-mapper/text2term",
+        mapper_path,
         "-s",
         source,
         "-t",

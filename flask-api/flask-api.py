@@ -19,8 +19,8 @@ def server_running():
 def upload_file():
     processId = uuid.uuid4()
 
-    # source always held in unstructured_terms.txt
-    source = INPUT_FOLDER + "unstructured_terms.txt"
+    # source always held in {processId}.txt
+    source = INPUT_FOLDER + f"{processId}.txt"
 
     if "unstructured_terms_text" in request.form:
         # text is list of terms, write to file
@@ -35,8 +35,8 @@ def upload_file():
         # target is link, just keep as link
         target = request.form["ontology_text"]
     else:
-        # target is file, save it and point to path
-        target = INPUT_FOLDER + "ontology.owl"
+        # target is file, save it and point to path ({processId.owl})
+        target = INPUT_FOLDER + f"{processId}.owl"
         f1 = request.files["ontology_file"]
         f1.save(target)
 
@@ -68,7 +68,7 @@ def upload_file():
     dbFile = f"output/{processId}.txt"
 
     with open(dbFile, "w") as f:
-        f.write("Starting ...\n")
+        f.write("Getting Mapper Ready ...\n")
 
     def run_mapper(dbFile):
         with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
@@ -76,7 +76,7 @@ def upload_file():
                 with open(dbFile, "a") as f:
                     f.write(line)  # append line to the appropriate status file
 
-        with open(dbFile, "w") as f:
+        with open(dbFile, "a") as f:
             f.write("DONE")  # overwrite file
 
     new_thread = Thread(target=run_mapper, args=(dbFile,))

@@ -1,6 +1,7 @@
 import Async from "react-async";
 import Results from "./Results";
 import Papa from "papaparse";
+import Layout from "./Layout";
 import { default as _ } from "lodash";
 import { useLocation } from "react-router-dom";
 
@@ -58,10 +59,23 @@ async function getData(processId) {
 export default function AsyncResults() {
     const location = useLocation();
     const processId = location.state.processId;
-    console.log(processId);
     return (
         <Async promiseFn={() => getData(processId)}>
-            <Async.Pending>Loading...</Async.Pending>
+            <Async.Pending>
+                <Layout
+                    content={
+                        <div class="d-flex justify-content-center">
+                            <div
+                                className="spinner-border text-dark"
+                                role="status"
+                                style={{ width: "4rem", height: "4rem" }}
+                            >
+                                <span className="sr-only"></span>
+                            </div>
+                        </div>
+                    }
+                />
+            </Async.Pending>
             <Async.Fulfilled>
                 {(results) => <Results {...results} />}
             </Async.Fulfilled>

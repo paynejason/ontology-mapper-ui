@@ -46,7 +46,6 @@ export default function Results(props) {
                             _.lastIndexOf(row.mapped_term_iri, "/") + 1
                         );
                     } catch (e) {
-                        // console.log(row);
                     } finally {
                     }
                     // extract the identifier from the URL

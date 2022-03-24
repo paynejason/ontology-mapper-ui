@@ -4,6 +4,7 @@ import ArgField from "./ArgField.js";
 import FileTextUpload from "./FileTextUpload";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { default as _ } from "lodash";
 
 function Form() {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Form() {
     const [unstructuredTerms, setUnstructuredTerms] = useState(undefined);
     const [ontology, setOntology] = useState(undefined);
     const [currentStatus, setCurrentStatus] = useState(
-        "Starting Mapping Process"
+        "Getting Mapper Ready ..."
     );
     const [processId, setProcessId] = useState(undefined);
 
@@ -39,11 +40,10 @@ function Form() {
                 axios
                     .get(url_status, { params: { processId: processId } })
                     .then((response) => {
-                        console.log(response.data);
                         setCurrentStatus(response.data);
-
-                        if (response.data === "DONE") {
-                            // file switches to just say "DONE" when mapping complete
+                        const final = _.last(response.data.split("\n"));
+                        if (final === "DONE") {
+                            // when mapping complete; final line will be DONE
                             setWaiting(false);
                             stopTimer();
                             navigate("/results/", {
@@ -183,11 +183,18 @@ function Form() {
     if (waiting) {
         return (
             <div className="waiting">
-                <h3>
-                    {currentStatus.split("\n").map((line) => (
-                        <p key={line}>{line}</p>
-                    ))}
-                </h3>
+                {currentStatus.split("\n").map((line) => (
+                    <p key={line}>{line}</p>
+                ))}
+                <div class="d-flex justify-content-center">
+                    <div
+                        className="spinner-border text-dark"
+                        role="status"
+                        style={{ width: "4rem", height: "4rem" }}
+                    >
+                        <span className="sr-only"></span>
+                    </div>
+                </div>
             </div>
         );
     }

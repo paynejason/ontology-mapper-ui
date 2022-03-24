@@ -1,5 +1,6 @@
 .waiting {
-    text-align: center;
+    font-weight: bold;
+    cursor: wait;
 }
 
 .arg-field > .label {

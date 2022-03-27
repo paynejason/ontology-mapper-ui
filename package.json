@@ -8,6 +8,7 @@
         "@testing-library/react": "^11.1.0",
         "@testing-library/user-event": "^12.1.10",
         "axios": "^0.24.0",
+        "concurrently": "^7.0.0",
         "history": "5",
         "lodash": "^4.17.21",
         "papaparse": "^5.3.1",
@@ -25,6 +26,7 @@
     "scripts": {
         "start": "react-scripts start",
         "flask-api": "cd flask-api && flask run --no-debugger",
+        "dev": "concurrently \"npm start\" \"npm run flask-api\"",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

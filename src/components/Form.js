@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Form.css";
 import ArgField from "./ArgField.js";
 import FileTextUpload from "./FileTextUpload";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { default as _ } from "lodash";
 
 function Form() {
     const navigate = useNavigate();
@@ -17,6 +18,49 @@ function Form() {
 
     const [unstructuredTerms, setUnstructuredTerms] = useState(undefined);
     const [ontology, setOntology] = useState(undefined);
+    const [currentStatus, setCurrentStatus] = useState(
+        "Getting Mapper Ready ..."
+    );
+    const [processId, setProcessId] = useState(undefined);
+
+    // api information
+    const URL_BASE =
+        process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
+    const url_mapper = URL_BASE + "/api/upload_file";
+    const url_status = URL_BASE + "/api/current_status";
+
+    useEffect(() => {
+        // while waiting for mapper to finish, ping current status endpoint
+
+        const TIME_INTERVAL = 5000; // in ms
+        let timer;
+
+        function startTimer() {
+            timer = setInterval(function () {
+                axios
+                    .get(url_status, { params: { processId: processId } })
+                    .then((response) => {
+                        setCurrentStatus(response.data);
+                        const final = _.last(response.data.split("\n"));
+                        if (final === "DONE") {
+                            // when mapping complete; final line will be DONE
+                            setWaiting(false);
+                            stopTimer();
+                            navigate("/results/", {
+                                state: { processId: processId },
+                            });
+                        }
+                    });
+            }, TIME_INTERVAL);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+        if (waiting) {
+            startTimer();
+        }
+    }, [waiting, navigate, url_status, processId]);
 
     const mainArgFields = [
         {
@@ -100,9 +144,7 @@ function Form() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        const URL_BASE =
-            process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
-        const url = URL_BASE + "/api/upload_file";
+
         const formData = new FormData();
 
         if (typeof unstructuredTerms === "string") {
@@ -132,18 +174,27 @@ function Form() {
             },
         };
 
-        setWaiting(true);
-
-        axios.post(url, formData, config).then((response) => {
-            console.log(response.data);
-            navigate("/results/");
+        axios.post(url_mapper, formData, config).then((response) => {
+            setProcessId(response.data);
+            setWaiting(true);
         });
     }
 
     if (waiting) {
         return (
             <div className="waiting">
-                <h3>Mapping in Progress ...</h3>
+                {currentStatus.split("\n").map((line) => (
+                    <p key={line}>{line}</p>
+                ))}
+                <div class="d-flex justify-content-center">
+                    <div
+                        className="spinner-border text-dark"
+                        role="status"
+                        style={{ width: "4rem", height: "4rem" }}
+                    >
+                        <span className="sr-only"></span>
+                    </div>
+                </div>
             </div>
         );
     }

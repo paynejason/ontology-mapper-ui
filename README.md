@@ -28,7 +28,11 @@ Then, after initialization run the command
 git submodule update
 ```
 
-to update the local version of that submodule.
+to update to the specific version of the `ontology-mapper` repository pinned to the UI. If instead you want to update to the latest version of the`ontology-mapper` repository, run
+
+```
+git submodule update --remote flask-api/ontology-mapper
+```
 
 Then, run the command:
 

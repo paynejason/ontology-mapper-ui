@@ -7,9 +7,6 @@ import os
 
 app = Flask(__name__)
 
-# if os.environ.get("FLASK_ENV") == "production":
-#     OUTPUT_FOLDER = INPUT_FOLDER = ""
-# else:
 OUTPUT_FOLDER = "output/"
 INPUT_FOLDER = "input/"
 
@@ -75,7 +72,7 @@ def upload_file():
     if request.form["incl_individuals"] == "true":
         command += ["-i"]
 
-    dbFile = f"output/{processId}.txt"
+    dbFile = OUTPUT_FOLDER + f"{processId}.txt"
 
     with open(dbFile, "w") as f:
         f.write("Getting Mapper Ready ...\n")

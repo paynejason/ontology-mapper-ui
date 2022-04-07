@@ -1,5 +1,4 @@
 from flask import Flask, request, Response, send_file, send_from_directory
-from flask_cors import CORS
 from subprocess import Popen, PIPE
 from threading import Thread
 import json

@@ -4,6 +4,7 @@ import { CSVLink } from "react-csv";
 
 import "./Results.css";
 
+import TermGraphsDownload from "./TermGraphsDownload";
 import TermRows from "./TermRows";
 import PageBar from "./PageBar";
 import Layout from "./Layout";
@@ -19,17 +20,18 @@ const table_columns = [
     "Approve or Reject Mappings",
 ];
 
-const csv_headers = _.map(
-    [
-        "",
-        "Source Term",
-        "Mapped Term Label",
-        "Mapped Term IRI",
-        "Mapping Score",
-        "Mapping Type",
-        "Status",
-    ],
-    (t) => ({ label: t, key: _.snakeCase(t) })
+const csv_headers = _.concat(
+    _.map(
+        [
+            "Source Term",
+            "Mapped Term Label",
+            "Mapped Term IRI",
+            "Mapping Score",
+            "Mapping Type",
+            "Status",
+        ],
+        (t) => ({ label: t, key: _.snakeCase(t) })
+    )
 );
 
 const TERMS_PER_PAGE = 10;
@@ -54,10 +56,10 @@ export default function Results(props) {
                     //     _.lastIndexOf(row.mapped_term_iri, "/") + 1
                     // );
                     return {
-                        ...row,
                         status: "unapproved",
                         mapping_type: "exact",
                         id: id,
+                        ...row,
                     };
                 }),
                 "source_term"
@@ -71,6 +73,7 @@ export default function Results(props) {
                 term_alt_number: i,
             }))
         );
+
         const sourceTerms = _.map(grouped, (group, g) => ({
             term: group[0],
             index: g,
@@ -196,15 +199,23 @@ export default function Results(props) {
             </p>
             <CSVLink
                 className="btn btn-secondary"
-                data={_.filter(
-                    _.flatMap(data, (v) => v),
-                    "selected"
+                data={_.flatMap(
+                    _.map(data, (group) => {
+                        // sorts the data so that the selected mapped term
+                        // for a given source term is first
+                        const sort = (f, s) =>
+                            f.selected ? -1 : s.selected ? 1 : 0;
+                        group.sort(sort);
+                        return group;
+                    }),
+                    (v) => v
                 )}
-                headers={csv_headers}
+                headers={[...csv_headers]}
                 filename={"mapping-output.csv"}
             >
-                Download
+                Download CSV
             </CSVLink>
+            <TermGraphsDownload termGraphs={props.graphs} />
             {pageBar}
             <table className="table">
                 <thead className="table-light">

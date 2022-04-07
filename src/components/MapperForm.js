@@ -6,7 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { default as _ } from "lodash";
 
-function Form() {
+function MapperForm() {
     const navigate = useNavigate();
     const [waiting, setWaiting] = useState(false);
     const [expanded, setExpanded] = useState(false);
@@ -25,8 +25,8 @@ function Form() {
 
     // api information
     const URL_BASE =
-        process.env.REACT_APP_DOCKER === "true" ? "" : "http://localhost:5000";
-    const url_mapper = URL_BASE + "/api/upload_file";
+        process.env.REACT_APP_DOCKER === "true" ? "" : "http://127.0.0.1:5000";
+    const url_mapper = URL_BASE + "/api/run_mapper";
     const url_status = URL_BASE + "/api/current_status";
 
     useEffect(() => {
@@ -186,7 +186,7 @@ function Form() {
                 {currentStatus.split("\n").map((line) => (
                     <p key={line}>{line}</p>
                 ))}
-                <div class="d-flex justify-content-center">
+                <div className="d-flex justify-content-center">
                     <div
                         className="spinner-border text-dark"
                         role="status"
@@ -246,4 +246,4 @@ function Form() {
     );
 }
 
-export default Form;
+export default MapperForm;

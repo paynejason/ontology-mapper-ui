@@ -26,7 +26,7 @@ async function getData(processId) {
     const URL_BASE =
         process.env.REACT_APP_DOCKER === "true"
             ? "http://localhost:3000"
-            : "http://localhost:5000";
+            : "http://127.0.0.1:5000";
     const csvURL = new URL(URL_BASE + "/api/download_csv");
     const jsonURL = new URL(URL_BASE + "/api/download_graph_json");
     csvURL.searchParams.append("processId", processId);
@@ -67,7 +67,7 @@ export default function AsyncResults() {
             <Async.Pending>
                 <Layout
                     content={
-                        <div class="d-flex justify-content-center">
+                        <div className="d-flex justify-content-center">
                             <div
                                 className="spinner-border text-dark"
                                 role="status"

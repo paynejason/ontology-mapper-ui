@@ -9,7 +9,9 @@
 -   Python >= 3.9.0
 -   pip >=21.0.0
 
-(_Note:_ these are the versions I have that work; while I know Python 3.9 or higher is necessary, the others may not strictly require the listed versions.)
+**\*** These are the versions I have that work; while I know Python 3.9 or higher is necessary, the others may not strictly require the listed versions.
+
+**\*\*** If you are running this locally on Google Chrome, you will likely run into issues with CORS (Cross-Origin Requests) that I have been unable to completely resolve. I would recommend using a different browser, using the Docker method, or finding some way to disable CORS on Chrome while running this.
 
 #### Instructions
 

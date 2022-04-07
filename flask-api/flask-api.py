@@ -1,4 +1,5 @@
 from flask import Flask, request, Response, send_file, send_from_directory
+from flask_cors import CORS
 from subprocess import Popen, PIPE
 from threading import Thread
 import json
@@ -13,11 +14,13 @@ INPUT_FOLDER = "input/"
 
 @app.route("/api")
 def server_running():
-    return "SERVER RUNNING"
+    resp = Response("SERVER RUNNING")
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
 
 
-@app.route("/api/upload_file", methods=["POST"])
-def upload_file():
+@app.route("/api/run_mapper", methods=["POST"])
+def run_mapper():
     processId = uuid.uuid4()
 
     # source always held in {processId}.txt
@@ -105,12 +108,29 @@ def current_status():
     return resp
 
 
+@app.route("/api/old_results", methods=["POST"])
+def old_results():
+    processId = uuid.uuid4()
+    csv = OUTPUT_FOLDER + f"{processId}.csv"
+    termGraphsJson = OUTPUT_FOLDER + f"{processId}.csv-term-graphs.json"
+
+    f1 = request.files["csv"]
+    f1.save(csv)
+
+    f2 = request.files["term_graphs_json"]
+    f2.save(termGraphsJson)
+
+    resp = Response(str(processId))
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+
 @app.route("/api/download_csv", methods=["GET"])
 def download_csv():
     processId = request.args["processId"]
     resp = send_from_directory(OUTPUT_FOLDER, f"{processId}.csv")
     resp.headers["Content-Type"] = "text/csv"
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp.headers["Access-Control-Allow-Origin"] = "Content-Type"
     return resp
 
 

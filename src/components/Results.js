@@ -90,13 +90,15 @@ export default function Results(props) {
         pageNumber * TERMS_PER_PAGE
     );
 
-    function changeField(source_term_index, term_row_index, field, value) {
+    function changeField(source_term_index, term_alt_number, field, value) {
         // for the index'ed row of source_term, change the value of field
         let newData = _.concat(
             data.slice(0, source_term_index),
             [
-                _.map(data[source_term_index], (row, i) =>
-                    i === term_row_index ? { ...row, [field]: value } : row
+                _.map(data[source_term_index], (row) =>
+                    row.term_alt_number === term_alt_number
+                        ? { ...row, [field]: value }
+                        : row
                 ),
             ],
             data.slice(source_term_index + 1)
@@ -146,14 +148,14 @@ export default function Results(props) {
         setData(newData);
     }
 
-    function setSelected(source_term_index, term_row_index) {
+    function setSelected(source_term_index, term_alt_number) {
         // for a source term, set the option at index to selected and all other options to unselected
         let newData = _.concat(
             data.slice(0, source_term_index),
             [
-                _.map(data[source_term_index], (row, i) => ({
+                _.map(data[source_term_index], (row) => ({
                     ...row,
-                    selected: i === term_row_index,
+                    selected: row.term_alt_number === term_alt_number,
                 })),
             ],
             data.slice(source_term_index + 1)

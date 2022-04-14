@@ -1,8 +1,8 @@
 import MapperForm from "./components/MapperForm";
 import Layout from "./components/Layout";
 
-function Home() {
+function Input() {
     return <Layout currentPath="/" content={<MapperForm />} />;
 }
 
-export default Home;
+export default Input;

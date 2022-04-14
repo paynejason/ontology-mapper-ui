@@ -36,16 +36,13 @@ async function getData(processId) {
         fetch(jsonURL),
     ]);
 
-    const [result, json] = await Promise.all([
-        csvResponse.body.getReader().read(),
+    // https://stackoverflow.com/questions/54842343/papaparse-not-parsing-full-data#54844917
+    const [csv, json] = await Promise.all([
+        csvResponse.text(),
         jsonResponse.json(),
     ]);
 
-    const decoder = new TextDecoder("utf-8");
-    const csv = decoder.decode(result.value);
-
     const data = (await parseCsv(csv)).data;
-
     // combine
     const combinedData = _.map(data, (d) => {
         const g = _.find(json, ["iri", d.mapped_term_iri]);
